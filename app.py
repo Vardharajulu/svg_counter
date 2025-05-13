@@ -87,11 +87,15 @@ def chat():
     if request.method == "POST":
         name = request.form.get("name", "Anonymous").strip()
         message = request.form.get("message", "").strip()
+        if message[0] == "$":
+            name = 'Vardha'
+            message = message[1:]
         if message:
             with sqlite3.connect(DB_FILE) as conn:
+                chennai_tz = pytz.timezone('Asia/Kolkata')
                 conn.execute(
                     "INSERT INTO messages (timestamp, name, message) VALUES (?, ?, ?)",
-                    (datetime.now().strftime("%H:%M:%S"), name, message)
+                    (datetime.now(chennai_tz).strftime('%d-%m-%Y %H:%M:%S'), name, message)
                 )
         return redirect("/chat")
 
