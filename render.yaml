@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: svg-counter
+    env: python
+    buildCommand: ""
+    startCommand: python app.py
