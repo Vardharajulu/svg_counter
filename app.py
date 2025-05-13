@@ -36,7 +36,11 @@ def counter():
 def clear_chat():
     if request.method == "POST":
         pwd = request.form.get("password", "")
+        msg = request.form.get("message", "")
         if pwd == 'ramvar':
+            if msg == 'yes':
+                global login_history
+                login_history = []
             with sqlite3.connect(DB_FILE) as conn:
                 conn.execute("DELETE FROM messages")
             return "<h3>Chat history cleared.</h3><a href='/chat'>Back to chat</a>"
@@ -46,6 +50,7 @@ def clear_chat():
     return '''
         <h2>Enter Admin Password to Clear Chat</h2>
         <form method="post">
+            Message: <input name="message" required />
             Password: <input type="password" name="password" />
             <button type="submit">Clear</button>
         </form>
@@ -62,6 +67,9 @@ def login():
             login_history.append({'time':datetime.now(chennai_tz).strftime('%d%m%Y %H:%M:%S'),
                                   'login': 'success'
                                   })
+            return redirect("/chat")
+        elif request.form.get("password") == 'vardha':
+            session["authenticated"] = True
             return redirect("/chat")
         else:
             # global login_history
